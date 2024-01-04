@@ -3,11 +3,12 @@ import { Schema, model } from "mongoose";
 const productSchema = new Schema({
     name: {
         type: String,
+        unique:true,
         required: true
     },
     description: {
         type: String,
-        required: true
+        default: ""
     },
     category: {
         type: String,
@@ -15,20 +16,19 @@ const productSchema = new Schema({
     },
     status: {
         type: Boolean,
-        default: true
+        default: false
     },
     featured: {
         type: Boolean,
-        default: true
+        default: false
     },
     time: {
         type: Number,
-        required: true,
         default: 1
     },
     price: {
         type: Number,
-        required: true
+        default: 0
     },
     thumbnails: {
         type: [

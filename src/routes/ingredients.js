@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getIngredients, postIngredient, putIngredient, deleteIngredient} from "../controllers/ingredients.controllers.js"
 //controllers
 //middlewares
 

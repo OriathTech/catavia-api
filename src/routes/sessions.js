@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { postSession, loginUser, logoutUser, getSession } from "../controllers/sessions.controllers.js";
 //controllers
 //middlewares
 

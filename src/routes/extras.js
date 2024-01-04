@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getExtras, postExtra, putExtra, deleteExtra} from "../controllers/extras.controllers.js"
 //controllers
 //middlewares
 
@@ -9,4 +10,4 @@ routerExtras.get('/', getExtras);
 routerExtras.post('/', postExtra);
 
 routerExtras.put('/:eid', putExtra);
-routerExtras.delete('/:eid', deleteExtras);
+routerExtras.delete('/:eid', deleteExtra);

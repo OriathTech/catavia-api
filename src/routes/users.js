@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getUsers, putUser, deleteUser } from "../controllers/users.controllers.js";
 //controllers
 //middlewares
 

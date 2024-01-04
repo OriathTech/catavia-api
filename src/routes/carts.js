@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getCart, deleteProductsCart, putCart, postProductCart, putProductQuantity, deleteProductCart, postTicket } from "../controllers/carts.controllers.js";
 //controllers
 //middlewares
 
@@ -13,7 +14,7 @@ routerCarts.post('/product/:pid', postProductCart);
 routerCarts.put('/product/:pid', putProductQuantity);
 routerCarts.delete('/product/:pid', deleteProductCart);
 
-routerCarts.post('/purchase',  postTicket);
+routerCarts.post('/ticket', postTicket)
 
 
 
