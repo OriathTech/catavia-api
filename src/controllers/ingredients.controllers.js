@@ -1,62 +1,90 @@
+import * as serv from "../services/ingredients.services.js"
+
 export const getIngredients = async (req, res, next) => {
     try {
-        res.status(200).send({
+        const ingredients = await serv.findIngredients()
+
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "Se han encontrado los elementos.",
+            payload: ingredients
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo encontrar los elementos.",
             error: error
         });
     }
 }
 
 export const postIngredient = async (req, res, next) => {
+    const { name, category, pricexg } = req.body
     try {
-        res.status(200).send({
+        const ingredient = await serv.createIngredient({ name, category, pricexg })
+
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido creado.",
+            payload: ingredient
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se ha podido crear el elemento.",
             error: error
         });
     }
 }
 
 export const putIngredient = async (req, res, next) => {
+    const info = req.body;
+    const iid = req.params.iid;
     try {
-        res.status(200).send({
+        const ingredient = await serv.updateIngredientById(iid, info)
+        
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido actualizado.",
+            payload: ingredient
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se ha podido actualizar el elemento.",
             error: error
         });
     }
 }
 
 export const deleteIngredient = async (req, res, next) => {
+    const iid = req.params.iid;
+
     try {
-        res.status(200).send({
-            status: "success",
-            message: "placeholder",
-        });
+        console.log(iid)
+        const ingredient = await serv.deleteIngredientById(iid)
+
+        if (ingredient) {
+            return res.status(200).send({
+                status: "success",
+                message: "El elemento ha sido eliminado.",
+                payload: ingredient
+            });
+        }
+
+        return res.status(200).send({
+            status: "warning",
+            message: "No se pudo eliminar el elemento, se encuentra en uno o más productos."
+        })
+
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo eliminar el elemento.",
             error: error
         });
     }

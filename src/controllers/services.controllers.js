@@ -1,62 +1,89 @@
+import * as serv from "../services/services.services.js";
+
 export const getServices = async (req, res, next) => {
     try {
-        res.status(200).send({
+        const services = await serv.findServices();
+
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "Se han encontrado los elementos.",
+            payload: services
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo encontrar los elementos.",
             error: error
         });
     }
 }
 
 export const postService = async (req, res, next) => {
+    const { name, category, pricexu } = req.body;
     try {
-        res.status(200).send({
+        const service = await serv.createService({name, category, pricexu});
+
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido creado.",
+            payload: service
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo crear el elemento.",
             error: error
         });
     }
 }
 
 export const putService = async (req, res, next) => {
+    const info = req.body;
+    const sid = req.params.eid;
+
     try {
-        res.status(200).send({
+        const extra = await serv.updateServiceById(sid, info);
+
+        return res.status(200).send({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido actualizado.",
+            payload: extra
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo actualizar el elemento.",
             error: error
         });
     }
 }
 
 export const deleteService = async (req, res, next) => {
+    const sid = req.params.eid;
+
     try {
-        res.status(200).send({
-            status: "success",
-            message: "placeholder",
+        const extra = await serv.deleteServiceById(sid);
+
+        if (extra) {
+            return res.status(200).send({
+                status: "success",
+                message: "El elemento ha sido eliminado.",
+                payload: extra
+            });
+        };
+
+        return res.status(200).send({
+            status: "warning",
+            message: "No se pudo eliminar el elemento, se encuentra en uno o más productos."
         });
 
     } catch (error) {
-        res.status(400).send({
+        return res.status(400).send({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo eliminar el elemento.",
             error: error
         });
     }

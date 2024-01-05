@@ -1,6 +1,6 @@
-export const findAll = async (model) => {
+export const findAll = async (model, filter) => {
     try {
-        return await model.find();
+        return await model.find(filter);
     } catch (error) {
         throw (error)
     }
@@ -16,7 +16,6 @@ export const findOneById = async (model, id) => {
 
 export const createOne = async (model, info) => {
     try {
-        console.log(info)
         return await model.create(info)
     } catch (error) {
         throw (error)

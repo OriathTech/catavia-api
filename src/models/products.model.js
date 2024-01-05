@@ -31,16 +31,24 @@ const productSchema = new Schema({
         default: 0
     },
     thumbnails: {
-        type: [
-            {
-                thumbnail: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Thumbnails',
-                    required: true
-                }
+        first: {
+            url: {
+                type: String,
+                default: null
             }
-        ],
-        default: []
+        },
+        second: {
+            url: {
+                type: String,
+                default: null
+            }
+        },
+        third: {
+            url: {
+                type: String,
+                default: null
+            }
+        },
     },
     ingredients: {
         type: [

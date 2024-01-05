@@ -1,92 +1,104 @@
-import { findProducts, createProduct } from "../services/products.services.js";
-
-
+import * as serv from "../services/products.services.js";
 
 export const getProducts = async (req, res, next) => {
     try {
+        const products = await serv.findProducts()
 
-        const products = await findProducts()
-
-        res.status(200).json({
+        return res.status(200).json({
             status: "success",
-            message: "placeholder",
+            message: "Se han encontrado los elementos.",
             payload: products
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo encontrar los elementos.",
             error: error
         });
     }
 }
 
 export const getProduct = async (req, res, next) => {
+    const pid = req.params.pid;
+
     try {
-        res.status(200).json({
+        const product = await serv.findProductById(pid)
+
+        return res.status(200).json({
             status: "success",
-            message: "placeholder",
+            message: "Se ha encontrado el elemento.",
+            payload: product
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: "error",
-            message: "placeholder",
+            message: "No se ha encontrado el elemento.",
             error: error
         });
     }
 }
 
 export const postProduct = async (req, res, next) => {
-
     const { name, description, category, time } = req.body;
 
     try {
-        const product = await createProduct({ name, description, category, time })
+        const product = await serv.createProduct({ name, description, category, time })
 
-        res.status(200).json({
+        return res.status(200).json({
             status: "success",
-            message: "placeholder",
+            message: "Se ha creado el elemento.",
             payload: product
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo crear el elemento.",
             error: error
         });
     }
 }
 
 export const putProduct = async (req, res, next) => {
+    const info = req.body;
+    const pid = req.params.pid;
+
     try {
-        res.status(200).json({
+        const product = await serv.updateProductById(pid, info)
+
+        return res.status(200).json({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido actualizado.",
+            payload: product
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: "error",
-            message: "placeholder",
+            message: "No se a podido actualizar el elemento.",
             error: error
         });
     }
 }
 
 export const deleteProduct = async (req, res, next) => {
+    const pid = req.params.pid;
+
     try {
-        res.status(200).json({
+        const product = await serv.deleteProductById(pid)
+
+        return res.status(200).json({
             status: "success",
-            message: "placeholder",
+            message: "El elemento ha sido eliminado.",
+            payload: product
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             status: "error",
-            message: "placeholder",
+            message: "No se pudo eliminar el elemento.",
             error: error
         });
     }
