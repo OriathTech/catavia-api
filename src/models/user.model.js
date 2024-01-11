@@ -25,6 +25,18 @@ const userSchema = new Schema({
     whatsapp: {
         type: Number,
         required: true
+    },
+    tickets: {
+        type: [
+            {
+                ticketId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Tickets',
+                    required: true
+                }
+            }
+        ],
+        default: []
     }
 })
 

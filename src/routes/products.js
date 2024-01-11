@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getProducts, postProduct, getProduct, putProduct, deleteProduct } from "../controllers/products.controllers.js";
+import { getProducts, postProduct, getProduct, putProduct, deleteProduct, checkout, postThumbnail, deleteThumbnail } from "../controllers/products.controllers.js";
 //controllers
 //middlewares
 
@@ -12,3 +12,8 @@ routerProducts.post('/',  postProduct);
 routerProducts.get('/:pid', getProduct);
 routerProducts.put('/:pid', putProduct);
 routerProducts.delete('/:pid', deleteProduct);
+
+routerProducts.post('/:pid/thumbnail/:position', postThumbnail);
+routerProducts.delete('/:pid/thumbnail/:position', deleteThumbnail);
+
+routerProducts.post('/chekout', checkout);

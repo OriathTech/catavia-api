@@ -1,4 +1,4 @@
-const whiteList = ["http://localhost:3000", "http://localhost:8080", "https://app-isla-de-marea.onrender.com", "https://api-isla-de-marea.onrender.com"];
+const whiteList = ["http://localhost:3000", "http://localhost:8080"];
 
 const corsOptions = {
   origin: function (origin, callback) {

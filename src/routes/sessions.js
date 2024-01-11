@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { postSession, loginUser, logoutUser, getSession } from "../controllers/sessions.controllers.js";
+import { loginUser, registerUser } from "../controllers/sessions.controllers.js";
 //controllers
 //middlewares
 
 export const routerSessions = Router();
 
 //("api/sessions")
-routerSessions.post("/register", postSession);
-routerSessions.post("/login", loginUser);
+routerSessions.post("/register", registerUser);
+routerSessions.get("/login/jwt", loginUser );
 
-routerSessions.get("/logout", logoutUser);
-routerSessions.get("/current", getSession);
+routerSessions.get("/logout");
+routerSessions.get("/current");

@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
 import express from "express";
-import connectionMongoose from "./config/mongoDB.js";
 import cors from 'cors';
-import corsOptions from "./config/cors.js";
+import corsOptions from "./config/cors/cors.js";
+import connectionMongoose from "./config/mongoDB/mongoDB.js";
 import router from './routes/index.routes.js'
 
 dotenv.config()

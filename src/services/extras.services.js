@@ -6,7 +6,7 @@ export const findExtras = async () => {
     try {
         return await rep.findAll(extraModel);
     } catch (error) {
-        throw (error)
+        throw error
     }
 }
 
@@ -14,7 +14,7 @@ export const createExtra  = async (info) => {
     try {
         return await rep.createOne(extraModel, info);
     } catch (error) {
-        throw (error)
+        throw error
     }
 }
 
@@ -22,7 +22,7 @@ export const updateExtraById  = async (id, info) => {
     try {
         return await rep.updateOneById(extraModel, id, info);
     } catch (error) {
-        throw (error)
+        throw error
     }
 }
 

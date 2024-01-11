@@ -3,11 +3,11 @@ import { Schema, model } from "mongoose";
 const ticketSchema = new Schema({
     user: {
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'Users',
             required: true
         },
-        name: {
+        email: {
             type: String,
             required: true
         }
@@ -20,8 +20,23 @@ const ticketSchema = new Schema({
         type: Date,
         required: true
     },
-    products: {
-        type: Array,
+    cart: {
+        type: [
+            {
+                name: {
+                    type: String,
+                    required: true
+                },
+                quantity: {
+                    type: Number,
+                    required: true
+                },
+                price: {
+                    type: Number,
+                    required: true
+                }
+            }
+        ],
         default: []
     },
     total: {

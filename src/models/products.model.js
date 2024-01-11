@@ -22,10 +22,6 @@ const productSchema = new Schema({
         type: Boolean,
         default: false
     },
-    time: {
-        type: Number,
-        default: 1
-    },
     price: {
         type: Number,
         default: 0
@@ -72,22 +68,6 @@ const productSchema = new Schema({
                 extra: {
                     type: Schema.Types.ObjectId,
                     ref: 'Extras',
-                    required: true
-                },
-                quantity: {
-                    type: Number,
-                    default: 0
-                }
-            }
-        ],
-        default: []
-    },
-    services: {
-        type: [
-            {
-                service: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Services',
                     required: true
                 },
                 quantity: {

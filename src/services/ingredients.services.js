@@ -6,7 +6,7 @@ export const findIngredients = async () => {
     try {
         return await rep.findAll(ingredientModel);
     } catch (error) {
-        throw (error)
+        throw error;
     }
 }
 
@@ -14,7 +14,7 @@ export const createIngredient  = async (info) => {
     try {
         return await rep.createOne(ingredientModel, info);
     } catch (error) {
-        throw (error)
+        throw error;
     }
 }
 
@@ -22,7 +22,7 @@ export const updateIngredientById  = async (id, info) => {
     try {
         return await rep.updateOneById(ingredientModel, id, info);
     } catch (error) {
-        throw (error)
+        throw error;
     }
 }
 
