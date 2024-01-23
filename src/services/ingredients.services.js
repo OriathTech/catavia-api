@@ -20,9 +20,16 @@ export const createIngredient  = async (info) => {
 
 export const updateIngredientById  = async (id, info) => {
     try {
-        return await rep.updateOneById(ingredientModel, id, info);
+        const ingredient = await rep.findOneById(id)
+        const updatedIngredient = await rep.updateOneById(extraModel, id, info);
+
+        if (ingredient.status != updatedIngredient.status && updatedIngredient.status === false) {
+            await rep.updateManyByFilter(productModel, { 'ingredients.ingredient': ingredient._id }, { $set: { status: false } });
+        }
+
+        return updatedIngredient;
     } catch (error) {
-        throw error;
+        throw error
     }
 }
 

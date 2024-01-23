@@ -5,19 +5,19 @@ const ticketSchema = new Schema({
         userId: {
             type: Schema.Types.ObjectId,
             ref: 'Users',
-            required: true
+            default: null
         },
         email: {
             type: String,
-            required: true
+            default: null
         }
     },
     purchaseDate: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        required: true
     },
     deliveryDate: {
-        type: Date,
+        type: String,
         required: true
     },
     cart: {

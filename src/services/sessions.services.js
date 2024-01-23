@@ -18,36 +18,47 @@ export const loginJWT = async (email, password) => {
         }
 
         const token = jwt.sign({ user: { id: user._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
-        return token;
+
+        const response = {
+            token:token,
+            user:user
+        }
+
+        return response;
 
     } catch (error) {
         throw error;
     }
 }
 
-export const register = async (name, birthday, email, whatsapp, password) => {
+export const register = async (data) => {
     try {
-        const user = await rep.findOneByFilter(userModel, { email: email });
+        const user = await rep.findOneByFilter(userModel, { email: data.email });
 
         if (user) {
             return null;
         }
 
-        const hashPassword = createHash(password);
+        const hashPassword = createHash(data.password);
 
         const newUser = await rep.createOne(userModel, {
-            name,
-            birthday,
-            email,
-            whatsapp,
-            password: hashPassword
+            name: data.name,
+            email: data.email,
+            whatsapp: data.whatsapp,
+            password: hashPassword,
+            birthday: data.birthday
         })
 
         const token = jwt.sign({ user: { id: newUser._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
-        return token;
+
+        const response = {
+            token:token,
+            user:newUser
+        }
+
+        return response;
 
     } catch (error) {
         throw error
     }
 }
-

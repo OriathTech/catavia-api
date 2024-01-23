@@ -1,13 +1,12 @@
 import { Router } from "express";
 import { getExtras, postExtra, putExtra, deleteExtra} from "../controllers/extras.controllers.js"
-//controllers
-//middlewares
+import { auth, roleValidation } from "../middlewares/auth.js";
 
 export const routerExtras = Router();
 
 //("api/extras")
-routerExtras.get('/', getExtras);
-routerExtras.post('/', postExtra);
+routerExtras.get('/', auth('jwt'), roleValidation(["admin"]), getExtras);
+routerExtras.post('/', auth('jwt'), roleValidation(["admin"]), postExtra);
 
-routerExtras.put('/:eid', putExtra);
-routerExtras.delete('/:eid', deleteExtra);
+routerExtras.put('/:eid', auth('jwt'), roleValidation(["admin"]), putExtra);
+routerExtras.delete('/:eid', auth('jwt'), roleValidation(["admin"]), deleteExtra);

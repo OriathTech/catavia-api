@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { getUsers, putUser, deleteUser } from "../controllers/users.controllers.js";
-//controllers
-//middlewares
+import { auth, roleValidation } from "../middlewares/auth.js";
 
 export const routerUsers = Router();
 
 //("api/users")
-routerUsers.get('/', getUsers);
+routerUsers.get('/', auth('jwt'), roleValidation(["admin"]), getUsers);
 
-routerUsers.put('/:uid', putUser);
-routerUsers.delete('/:uid', deleteUser);
+routerUsers.put('/:uid', auth('jwt'), roleValidation(["admin"]), putUser);
+routerUsers.delete('/:uid', auth('jwt'), roleValidation(["admin"]), deleteUser);

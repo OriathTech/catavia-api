@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const productSchema = new Schema({
     name: {
         type: String,
-        unique:true,
+        unique: true,
         required: true
     },
     description: {
@@ -11,16 +11,16 @@ const productSchema = new Schema({
         default: ""
     },
     category: {
-        type: String,
-        required: true
+        type: [{
+            type: String,
+            enum: ['salados', 'chocolatería', 'tortas', 'tartas', 'postres', 'individuales', 'frutales', 'regalos', 'temporada', 'catering', 'desayunos', 'panificados']
+        }],
+        default: []
     },
     status: {
-        type: Boolean,
-        default: false
-    },
-    featured: {
-        type: Boolean,
-        default: false
+        type: String,
+        enum: ["offline", "online", "featured"],
+        default: "offline"
     },
     price: {
         type: Number,

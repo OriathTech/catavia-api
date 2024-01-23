@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/sessions.controllers.js";
-//controllers
-//middlewares
+import { loginUser, registerUser, logout, getSession } from "../controllers/sessions.controllers.js";
+import { auth } from "../middlewares/auth.js";
 
 export const routerSessions = Router();
 
-//("api/sessions")
+//("api/session")
 routerSessions.post("/register", registerUser);
-routerSessions.get("/login/jwt", loginUser );
+routerSessions.post("/login/jwt", loginUser );
 
-routerSessions.get("/logout");
-routerSessions.get("/current");
+routerSessions.get("/logout", logout);
+routerSessions.get("/current", auth('jwt'), getSession);

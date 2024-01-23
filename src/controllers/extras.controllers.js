@@ -1,4 +1,6 @@
 import * as serv from "../services/extras.services.js";
+import * as zod from "../utils/zod/validations.js"
+import extraSchemaZ from "../utils/zod/schemas/extras.js";
 
 export const getExtras = async (req, res, next) => {
     try {
@@ -20,9 +22,22 @@ export const getExtras = async (req, res, next) => {
 }
 
 export const postExtra = async (req, res, next) => {
-    const { name, category, pricexm } = req.body;
+    const info = req.body;
+
     try {
-        const extras = await serv.createExtra({name, category, pricexm});
+        const data = zod.validateNewElement(extraSchemaZ, info, ["name"])
+
+        if (!data.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
+            });
+        }
+
+        const extras = await serv.createExtra(data.data);
 
         return res.status(200).json({
             status: "success",
@@ -40,11 +55,37 @@ export const postExtra = async (req, res, next) => {
 }
 
 export const putExtra = async (req, res, next) => {
-    const info = req.body;
     const eid = req.params.eid;
+    const info = req.body;
 
     try {
-        const extra = await serv.updateExtraById(eid, info);
+        const extraId = zod.validateId(eid);
+
+        if (!extraId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(extraId.error.message)
+                }
+            });
+        }
+
+        const data = zod.validateElement(extraSchemaZ, info);
+
+        if (!data.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
+            });
+        }
+
+        console.log(data.data)
+
+        const extra = await serv.updateExtraById(extraId.data, data.data);
 
         return res.status(200).json({
             status: "success",
@@ -65,7 +106,19 @@ export const deleteExtra = async (req, res, next) => {
     const eid = req.params.eid;
 
     try {
-        const extra = await serv.deleteExtraById(eid);
+        const extraId = zod.validateId(eid);
+
+        if (!extraId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(extraId.error.message)
+                }
+            });
+        }
+
+        const extra = await serv.deleteExtraById(extraId.data);
 
         if (extra) {
             return res.status(200).json({

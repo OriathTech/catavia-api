@@ -6,10 +6,6 @@ const extraSchema = new Schema({
         required: true,
         unique: true
     },
-    category: {
-        type: String,
-        required: true
-    },
     pricexu: {
         type: Number,
         required: true,
@@ -18,10 +14,6 @@ const extraSchema = new Schema({
     status: {
         type: Boolean,
         default: true 
-    },
-    inall: {
-        type: Boolean,
-        default: false
     }
 })
 

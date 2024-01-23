@@ -1,4 +1,6 @@
 import * as serv from "../services/ingredients.services.js"
+import * as zod from "../utils/zod/validations.js"
+import ingredientSchemaZ from "../utils/zod/schemas/ingredients.js"
 
 export const getIngredients = async (req, res, next) => {
     try {
@@ -20,9 +22,22 @@ export const getIngredients = async (req, res, next) => {
 }
 
 export const postIngredient = async (req, res, next) => {
-    const { name, category, pricexg } = req.body
+    const info = req.body;
+
     try {
-        const ingredient = await serv.createIngredient({ name, category, pricexg })
+        const data = zod.validateNewElement(ingredientSchemaZ, info, ["name"]);
+
+        if (!data.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
+            });
+        }
+
+        const ingredient = await serv.createIngredient(data.data)
 
         return res.status(200).json({
             status: "success",
@@ -43,7 +58,31 @@ export const putIngredient = async (req, res, next) => {
     const info = req.body;
     const iid = req.params.iid;
     try {
-        const ingredient = await serv.updateIngredientById(iid, info)
+        const ingredientId = zod.validateId(iid);
+
+        if (!ingredientId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(ingredientId.error.message)
+                }
+            });
+        }
+
+        const data = zod.validateElement(ingredientSchemaZ, info);
+
+        if (!data.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
+            });
+        }
+
+        const ingredient = await serv.updateIngredientById(ingredientId.data, data.data);
         
         return res.status(200).json({
             status: "success",
@@ -64,8 +103,19 @@ export const deleteIngredient = async (req, res, next) => {
     const iid = req.params.iid;
 
     try {
-        console.log(iid)
-        const ingredient = await serv.deleteIngredientById(iid)
+        const ingredientId = zod.validateId(iid);
+
+        if (!ingredientId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(ingredientId.error.message)
+                }
+            });
+        }
+
+        const ingredient = await serv.deleteIngredientById(ingredientId.data)
 
         if (ingredient) {
             return res.status(200).json({

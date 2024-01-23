@@ -6,7 +6,7 @@ const userSchema = new Schema({
         required: true,
     },
     password: {
-        type: Number,
+        type: String,
         required: true
     },
     email: {
@@ -19,12 +19,16 @@ const userSchema = new Schema({
         default: 0
     },
     birthday: {
-        type: Date,
+        type: String,
         required: true
     },
     whatsapp: {
-        type: Number,
+        type: String,
         required: true
+    },
+    role: {
+        type: String,
+        default: 'user'
     },
     tickets: {
         type: [

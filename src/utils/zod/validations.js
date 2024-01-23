@@ -8,7 +8,11 @@ export function validateElement(schema, data) {
 export function validateNewElement(schema, data, required) {
     const requiredFields = required;
 
+    console.log(requiredFields)
+
     const result = schema.safeParse(data, { extra: 'remove' });
+
+    console.log(result)
 
     if (result.success) {
         const missingFields = requiredFields.filter(field => !(field in result.data));
@@ -16,7 +20,10 @@ export function validateNewElement(schema, data, required) {
             return {
                 success: false,
                 error: {
-                    message: `Missing required fields: ${missingFields.join(', ')}`,
+                    message: JSON.stringify({
+                        code: "missing_required_fields",
+                        fields: missingFields,
+                    })
                 },
             };
         }
@@ -28,25 +35,26 @@ export function validateNewElement(schema, data, required) {
 export function validateId(id) {
     const idSchema = z.string().refine((value) => /^[0-9a-fA-F]{24}$/.test(value), {
         message: 'Id must be a valid ObjectId.',
-    }).required()
+    })
     return idSchema.safeParse(id, { extra: 'remove' });
 }
 
 export function validatePosition(position) {
-    const positionSchema = z.string(
-        z.enum(['first', 'second', 'third']),
-        { invalid_type_error: 'Position must be a string of enum category.', }
-    ).toLowerCase().required();
+    const positionSchema = z.enum(['first', 'second', 'third'],
+        {
+            invalid_type_error: 'Extra category must be a string of enum category.'
+        }
+    )
     return schema.safeParse(position, { extra: 'remove' });
 }
 
 export function validateUrl(url) {
-    const urlSchema = z.string().url().required()
+    const urlSchema = z.string().url()
     return schema.safeParse(url, { extra: 'remove' });
 }
 
 export function validatePoints(points) {
-    const pointsSchema = z.number().int().nonnegative().required()
+    const pointsSchema = z.number().int().nonnegative()
     return schema.safeParse(points, { extra: 'remove' });
 }
 

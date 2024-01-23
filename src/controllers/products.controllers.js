@@ -1,6 +1,7 @@
 import * as serv from "../services/products.services.js";
 import * as zod from "../utils/zod/validations.js"
 import productSchemaZ from "../utils/zod/schemas/products.js";
+import cartSchemaZ from "../utils/zod/schemas/carts.js";
 
 export const getProducts = async (req, res, next) => {
     try {
@@ -25,7 +26,19 @@ export const getProduct = async (req, res, next) => {
     const pid = req.params.pid;
 
     try {
-        const product = await serv.findProductById(pid)
+        const productId = zod.validateId(pid);
+
+        if (!productId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(productId.error.message)
+                }
+            });
+        }
+
+        const product = await serv.findProductById(productId.data)
 
         return res.status(200).json({
             status: "success",
@@ -43,22 +56,23 @@ export const getProduct = async (req, res, next) => {
 }
 
 export const postProduct = async (req, res, next) => {
-    const data = req.body;
+    const info = req.body;
 
     try {
-        const result = zod.validateNewElement(productSchemaZ, data, ["name", "category"])
+        const data = zod.validateNewElement(productSchemaZ, info, ["name"])
 
-        if (!result.success) {
+        if (!data.success) {
             return res.status(422).json({
                 status: "error",
                 message: "Error de validación",
-                errors: result.error.message
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
             });
         }
 
-        console.log(result.data)
 
-        const product = await serv.createProduct(result.data)
+        const product = await serv.createProduct(data.data)
 
         return res.status(200).json({
             status: "success",
@@ -80,7 +94,31 @@ export const putProduct = async (req, res, next) => {
     const pid = req.params.pid;
 
     try {
-        const product = await serv.updateProductById(pid, info)
+        const productId = zod.validateId(pid);
+
+        if (!productId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(productId.error.message)
+                }
+            });
+        }
+
+        const data = zod.validateElement(productSchemaZ, info)
+
+        if (!data.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(data.error.message)
+                }
+            });
+        }
+
+        const product = await serv.updateProductById(productId.data, data.data)
 
         return res.status(200).json({
             status: "success",
@@ -101,7 +139,19 @@ export const deleteProduct = async (req, res, next) => {
     const pid = req.params.pid;
 
     try {
-        const product = await serv.deleteProductById(pid)
+        const productId = zod.validateId(pid);
+
+        if (!productId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(productId.error.message)
+                }
+            });
+        }
+
+        const product = await serv.deleteProductById(productId.data)
 
         return res.status(200).json({
             status: "success",
@@ -124,7 +174,43 @@ export const postThumbnail = async (req, res, next) => {
     const { url } = req.body;
 
     try {
-        const product = await serv.updateThumbnailByPosition(pid, url, position);
+        const productId = zod.validateId(pid);
+
+        if (!productId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(productId.error.message)
+                }
+            });
+        }
+
+        const validatedPosition = zod.validatePosition(position);
+
+        if (!validatedPosition.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(validatedPosition.error.message)
+                }
+            });
+        }
+
+        const validatedUrl = zod.validateUrl(url);
+
+        if (!validatedUrl.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(validatedUrl.error.message)
+                }
+            });
+        }
+
+        const product = await serv.updateThumbnailByPosition(productId.data, validatedUrl.data , validatedPosition.data);
 
         return res.status(200).json({
             status: "success",
@@ -146,7 +232,31 @@ export const deleteThumbnail = async (req, res, next) => {
     const position = req.params.position;
 
     try {
-        const product = await serv.deleteThumbnailByPosition(pid, position);
+        const productId = zod.validateId(pid);
+
+        if (!productId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(productId.error.message)
+                }
+            });
+        }
+
+        const validatedPosition = zod.validatePosition(position);
+
+        if (!validatedPosition.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(validatedPosition.error.message)
+                }
+            });
+        }
+
+        const product = await serv.deleteThumbnailByPosition(productId.data, validatedPosition.data);
 
         return res.status(200).json({
             status: "success",
@@ -164,11 +274,23 @@ export const deleteThumbnail = async (req, res, next) => {
 }
 
 export const checkout = async (req, res, next) => {
-    const {cart, deliveryDate} = req.body;
+    const data = req.body;
     const user = req.user;
 
     try {
-        const ticket = await serv.createTicket(user, cart, deliveryDate);
+        const dataCart = zod.validateElement(cartSchemaZ, data)
+
+        if (!dataCart.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(dataCart.error.message)
+                }
+            });
+        }
+
+        const ticket = await serv.createTicket(user, dataCart.data);
 
         if (!ticket) {
             throw new Error(`Hubo un problema en la Base de datos.`)

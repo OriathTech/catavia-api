@@ -10,7 +10,7 @@ export const findExtras = async () => {
     }
 }
 
-export const createExtra  = async (info) => {
+export const createExtra = async (info) => {
     try {
         return await rep.createOne(extraModel, info);
     } catch (error) {
@@ -18,9 +18,16 @@ export const createExtra  = async (info) => {
     }
 }
 
-export const updateExtraById  = async (id, info) => {
+export const updateExtraById = async (id, info) => {
     try {
-        return await rep.updateOneById(extraModel, id, info);
+        const extra = await rep.findOneById(id)
+        const updatedExtra = await rep.updateOneById(extraModel, id, info);
+
+        if (extra.status != updatedExtra.status && updatedExtra.status === false) {
+            await rep.updateManyByFilter(productModel, { 'extras.extra': extra._id }, { $set: { status: false } });
+        }
+
+        return updatedExtra;
     } catch (error) {
         throw error
     }
@@ -28,12 +35,12 @@ export const updateExtraById  = async (id, info) => {
 
 export const deleteExtraById = async (id) => {
     try {
-        const productsWithExtra = await rep.findAll(productModel, {'extras.extra': id});
-        
+        const productsWithExtra = await rep.findAll(productModel, { 'extras.extra': id });
+
         console.log(productsWithExtra)
-        
+
         if (productsWithExtra.length > 0) {
-           return null
+            return null
         }
 
         return await rep.deleteOneById(extraModel, id);

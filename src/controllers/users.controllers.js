@@ -1,4 +1,6 @@
 import * as serv from '../services/users.services.js'
+import * as zod from '../utils/zod/validations.js'
+import userSchemaZ from '../utils/zod/schemas/users.js'
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -23,7 +25,31 @@ export const putUser = async (req, res, next) => {
     const uid = req.params.uid;
 
     try {
-        const user = await serv.updateUserById(uid, points);
+        const userId = zod.validateId(uid);
+
+        if (!userId.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(userId.error.message)
+                }
+            });
+        }
+
+        const validatedPoints = zod.validatePoints(points);
+
+        if (!validatedPoints.success) {
+            return res.status(422).json({
+                status: "error",
+                message: "Error de validación",
+                errors: {
+                    message: JSON.parse(validatedPoints.error.message)
+                }
+            });
+        }
+
+        const user = await serv.updateUserById(userId.data, validatedPoints.data);
 
         return res.status(200).json({
             status: "success",
