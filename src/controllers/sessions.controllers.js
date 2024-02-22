@@ -43,7 +43,7 @@ export const loginUser = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "Ocurrio un error en el login.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -86,7 +86,7 @@ export const registerUser = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "Ocurrio un error en el registro.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -104,7 +104,7 @@ export const logout = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "Ocurrio un error en el logout.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -124,7 +124,7 @@ export const getSession = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "Ocurrio un error en el logout.",
-            error: error
+            error: error.message
         });
     }
 }

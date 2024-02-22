@@ -3,7 +3,7 @@ import userModel from "../models/user.model.js"
 
 export const findUsers = async () => {
     try {
-        return await rep.findAll(userModel);
+        return await rep.findAll(userModel, { role: { $ne: "admin" } } );
     } catch (error) {
         throw (error)
     }

@@ -1,31 +1,31 @@
-import * as serv from "../services/extras.services.js";
+import * as serv from "../services/elements.services.js";
 import * as zod from "../utils/zod/validations.js"
-import extraSchemaZ from "../utils/zod/schemas/extras.js";
+import elementSchemaZ from "../utils/zod/schemas/elements.js";
 
-export const getExtras = async (req, res, next) => {
+export const getElements = async (req, res, next) => {
     try {
-        const extras = await serv.findExtras();
+        const response = await serv.findElements();
 
         return res.status(200).json({
             status: "success",
             message: "Se han encontrado los elementos.",
-            payload: extras
+            payload: response
         });
 
     } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "No se pudo encontrar los elementos.",
-            error: error
+            error: error.message
         });
     }
 }
 
-export const postExtra = async (req, res, next) => {
+export const postElement = async (req, res, next) => {
     const info = req.body;
 
     try {
-        const data = zod.validateNewElement(extraSchemaZ, info, ["name"])
+        const data = zod.validateNewElement(elementSchemaZ, info, ["name"])
 
         if (!data.success) {
             return res.status(422).json({
@@ -37,41 +37,41 @@ export const postExtra = async (req, res, next) => {
             });
         }
 
-        const extras = await serv.createExtra(data.data);
+        const elements = await serv.createElement(data.data);
 
         return res.status(200).json({
             status: "success",
             message: "El elemento ha sido creado.",
-            payload: extras
+            payload: elements
         });
 
     } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "No se pudo crear el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
 
-export const putExtra = async (req, res, next) => {
+export const putElement = async (req, res, next) => {
     const eid = req.params.eid;
     const info = req.body;
 
     try {
-        const extraId = zod.validateId(eid);
+        const elementId = zod.validateId(eid);
 
-        if (!extraId.success) {
+        if (!elementId.success) {
             return res.status(422).json({
                 status: "error",
                 message: "Error de validación",
                 errors: {
-                    message: JSON.parse(extraId.error.message)
+                    message: JSON.parse(elementId.error.message)
                 }
             });
         }
 
-        const data = zod.validateElement(extraSchemaZ, info);
+        const data = zod.validateElement(elementSchemaZ, info);
 
         if (!data.success) {
             return res.status(422).json({
@@ -83,61 +83,61 @@ export const putExtra = async (req, res, next) => {
             });
         }
 
-        console.log(data.data)
-
-        const extra = await serv.updateExtraById(extraId.data, data.data);
+        const response = await serv.updateElementById(elementId.data, data.data);
 
         return res.status(200).json({
             status: "success",
             message: "El elemento ha sido actualizado.",
-            payload: extra
+            payload: response.payload,
+            reload: response.reload
         });
 
     } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "No se pudo actualizar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
 
-export const deleteExtra = async (req, res, next) => {
+export const deleteElement = async (req, res, next) => {
     const eid = req.params.eid;
 
     try {
-        const extraId = zod.validateId(eid);
+        const elementId = zod.validateId(eid);
 
-        if (!extraId.success) {
+        if (!elementId.success) {
             return res.status(422).json({
                 status: "error",
                 message: "Error de validación",
                 errors: {
-                    message: JSON.parse(extraId.error.message)
+                    message: JSON.parse(elementId.error.message)
                 }
             });
         }
 
-        const extra = await serv.deleteExtraById(extraId.data);
+        const response = await serv.deleteElementById(elementId.data);
 
-        if (extra) {
+        if (response.status === "warning") {
             return res.status(200).json({
-                status: "success",
-                message: "El elemento ha sido eliminado.",
-                payload: extra
+                status: "warning",
+                message: "No se pudo eliminar el elemento, se encuentra en uno o más productos.",
+                payload: response.payload
             });
         };
 
         return res.status(200).json({
-            status: "warning",
-            message: "No se pudo eliminar el elemento, se encuentra en uno o más productos."
+            status: "success",
+            message: "El elemento ha sido eliminado.",
+            payload: response
         });
 
     } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }

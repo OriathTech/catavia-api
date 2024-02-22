@@ -17,7 +17,7 @@ export const getProducts = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo encontrar los elementos.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -50,16 +50,20 @@ export const getProduct = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se ha encontrado el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
 
 export const postProduct = async (req, res, next) => {
     const info = req.body;
+    console.log(`Recibo: ${JSON.stringify(info)}`)
 
     try {
         const data = zod.validateNewElement(productSchemaZ, info, ["name"])
+
+        console.log(`Validado: ${JSON.stringify(data.data)}`)
+
 
         if (!data.success) {
             return res.status(422).json({
@@ -74,6 +78,8 @@ export const postProduct = async (req, res, next) => {
 
         const product = await serv.createProduct(data.data)
 
+        console.log(`Validado: ${JSON.stringify(product)}`)
+
         return res.status(200).json({
             status: "success",
             message: "Se ha creado el elemento.",
@@ -84,7 +90,7 @@ export const postProduct = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo crear el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -101,12 +107,12 @@ export const putProduct = async (req, res, next) => {
                 status: "error",
                 message: "Error de validación",
                 errors: {
-                    message: JSON.parse(productId.error.message)
+                    message: (productId.error.message)
                 }
             });
         }
 
-        const data = zod.validateElement(productSchemaZ, info)
+        const data = await zod.validateNewElement(productSchemaZ, info, [])
 
         if (!data.success) {
             return res.status(422).json({
@@ -118,7 +124,8 @@ export const putProduct = async (req, res, next) => {
             });
         }
 
-        const product = await serv.updateProductById(productId.data, data.data)
+        const product = await serv.updateProductById(productId.data, info)
+        console.log(product)
 
         return res.status(200).json({
             status: "success",
@@ -127,10 +134,11 @@ export const putProduct = async (req, res, next) => {
         });
 
     } catch (error) {
+        console.log(error)
         return res.status(400).json({
             status: "error",
             message: "No se a podido actualizar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -163,14 +171,14 @@ export const deleteProduct = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
 
 export const postThumbnail = async (req, res, next) => {
     const pid = req.params.pid;
-    const position = req.params.position;
+    const position = req.params.position.toString();
     const { url } = req.body;
 
     try {
@@ -185,9 +193,9 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-
+        console.log(productId)
         const validatedPosition = zod.validatePosition(position);
-
+        
         if (!validatedPosition.success) {
             return res.status(422).json({
                 status: "error",
@@ -197,7 +205,7 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-
+        console.log(validatedPosition)
         const validatedUrl = zod.validateUrl(url);
 
         if (!validatedUrl.success) {
@@ -210,6 +218,7 @@ export const postThumbnail = async (req, res, next) => {
             });
         }
 
+        console.log(validatedUrl)
         const product = await serv.updateThumbnailByPosition(productId.data, validatedUrl.data , validatedPosition.data);
 
         return res.status(200).json({
@@ -222,7 +231,7 @@ export const postThumbnail = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -268,7 +277,7 @@ export const deleteThumbnail = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -306,7 +315,7 @@ export const checkout = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }

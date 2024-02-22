@@ -2,17 +2,15 @@ import { z } from "zod";
 
 
 export function validateElement(schema, data) {
-    return schema.safeParse(data, { extra: 'remove' });
+    console.log(data)
+    const result = schema.safeParse(data, { extra: 'remove' });
+    return result
 }
 
 export function validateNewElement(schema, data, required) {
     const requiredFields = required;
 
-    console.log(requiredFields)
-
     const result = schema.safeParse(data, { extra: 'remove' });
-
-    console.log(result)
 
     if (result.success) {
         const missingFields = requiredFields.filter(field => !(field in result.data));
@@ -45,17 +43,17 @@ export function validatePosition(position) {
             invalid_type_error: 'Extra category must be a string of enum category.'
         }
     )
-    return schema.safeParse(position, { extra: 'remove' });
+    return positionSchema.safeParse(position, { extra: 'remove' });
 }
 
 export function validateUrl(url) {
     const urlSchema = z.string().url()
-    return schema.safeParse(url, { extra: 'remove' });
+    return urlSchema.safeParse(url, { extra: 'remove' });
 }
 
 export function validatePoints(points) {
     const pointsSchema = z.number().int().nonnegative()
-    return schema.safeParse(points, { extra: 'remove' });
+    return pointsSchema.safeParse(points, { extra: 'remove' });
 }
 
 

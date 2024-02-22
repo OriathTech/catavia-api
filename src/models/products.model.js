@@ -46,28 +46,27 @@ const productSchema = new Schema({
             }
         },
     },
-    ingredients: {
+    elements: {
         type: [
             {
-                ingredient: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Ingredients',
+                id: {
+                    type: String,
+                    required: true
+                },       
+                name: {
+                    type: String,
                     required: true
                 },
-                quantity: {
+                price: {
                     type: Number,
-                    default: 0
-                }
-            }
-        ],
-        default: []
-    },
-    extras: {
-        type: [
-            {
-                extra: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Extras',
+                    required: true
+                },
+                status: {
+                    type: String,
+                    default: "online"
+                },
+                category: {
+                    type: String,
                     required: true
                 },
                 quantity: {

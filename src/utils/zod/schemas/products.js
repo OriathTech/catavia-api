@@ -1,21 +1,25 @@
 import { z } from "zod";
 
-const itemThumbnail = z.object({
-    url: z.string().url().nullable().optional()
+
+const thumbnails = z.object({
+    first: z.object({
+        url: z.string().nullable().optional()
+    }),
+    second: z.object({
+        url: z.string().nullable().optional()
+    }),
+    third: z.object({
+        url: z.string().nullable().optional()
+    })
 });
 
-const itemIngredient = z.object({
-    ingredient: z.string().refine((value) => /^[0-9a-fA-F]{24}$/.test(value), {
-        message: 'Ingredient must be a valid ObjectId.',
-    }).optional(),
-    quantity: z.number().optional()
-});
-
-const itemExtra = z.object({
-    extra: z.string().refine((value) => /^[0-9a-fA-F]{24}$/.test(value), {
-        message: 'Extra must be a valid ObjectId.',
-    }).optional(),
-    quantity: z.number().optional()
+const itemElement = z.object({
+    id: z.string().optional(),
+    name: z.string().optional(),
+    price: z.number().optional(),
+    status: z.string().optional(),
+    quantity: z.number().optional(),
+    category: z.string("extra", "ingredient").optional(),
 });
 
 const productSchemaZ = z.object({
@@ -36,10 +40,8 @@ const productSchemaZ = z.object({
     category: z.array(
         z.enum(['salados', 'chocolatería', 'tortas', 'tartas', 'postres', 'individuales', 'frutales', 'regalos', 'temporada', 'catering', 'desayunos', 'panificados'])
     ).optional(),
-    thumbnails: z.array(itemThumbnail).optional(),
-    ingredients: z.array(itemIngredient).optional(),
-    extras: z.array(itemExtra).optional()
+    thumbnails: thumbnails.optional(),
+    elements: z.array(itemElement).optional()
 });
-
 
 export default productSchemaZ;

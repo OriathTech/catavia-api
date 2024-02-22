@@ -1,11 +1,11 @@
 export const findAll = async (model, filter) => {
     try {
-        return await model.find(filter);
+        const documents = await model.find(filter);
+        return documents;
     } catch (error) {
-        throw error
+        throw error;
     }
 }
-
 export const findOneById = async (model, id) => {
     try {
         return await model.findById(id);

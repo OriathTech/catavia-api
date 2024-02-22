@@ -9,13 +9,14 @@ export const getUsers = async (req, res, next) => {
         return res.status(200).json({
             status: "success",
             message: "El elemento ha sido encontrado",
+            payload: users
         });
 
     } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "No se ha encontrado el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -61,7 +62,7 @@ export const putUser = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se ha podido actualizar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }
@@ -80,7 +81,7 @@ export const deleteUser = async (req, res, next) => {
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",
-            error: error
+            error: error.message
         });
     }
 }

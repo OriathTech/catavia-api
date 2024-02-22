@@ -1,28 +1,13 @@
 import * as rep from "../repositories/repositories.js";
 import productModel from "../models/products.model.js";
-import ingredientModel from "../models/ingredients.model.js";
-import extraModel from "../models/extras.model.js";
 import ticketModel from "../models/tickets.model.js";
 
+import { dateNowWithFormat, calculateProductPriceStatus } from "../utils/functions/functions.js";
 
 export const findProducts = async () => {
     try {
         const products = await rep.findAll(productModel)
-
-        console.log(products)
-
-        // if (products) {
-        //     const populateProducts = await products.populate([
-        //         { path: "extras.extra", model: extraModel },
-        //         { path: "ingredients.ingredient", model: ingredientModel }
-        //     ]);
-
-        //     return populateProducts;
-        // }
-
         return products;
-
-
     } catch (error) {
         throw error;
     }
@@ -30,15 +15,9 @@ export const findProducts = async () => {
 
 export const createProduct = async (info) => {
     try {
-        const updatedproduct = await rep.createOne(productModel, info);
-
-        console.log(`updatedProduct: ${updatedproduct}`)
-
-        const populateProduct = await calculateProductPrice(updatedproduct);
-
-        console.log(`populateProduct: ${populateProduct}`)
-
-        return populateProduct;
+        const newProduct = await rep.createOne(productModel, info);
+        const updatedProduct = await calculateProductPriceStatus(newProduct);
+        return updatedProduct;
     } catch (error) {
         throw error;
     }
@@ -46,15 +25,8 @@ export const createProduct = async (info) => {
 
 export const findProductById = async (id) => {
     try {
-
         const product = await rep.findOneById(productModel, id);
-
-        const populateProduct = await product.populate([
-            { path: "extras.extra", model: extraModel },
-            { path: "ingredients.ingredient", model: ingredientModel }
-        ]);
-
-        return populateProduct;
+        return product;
     } catch (error) {
         throw error;
     }
@@ -63,13 +35,10 @@ export const findProductById = async (id) => {
 export const updateProductById = async (id, info) => {
     try {
         const product = await rep.findOneById(productModel, id);
+
         const updatedProduct = await rep.updateOneById(productModel, id, info);
 
-        const populateProduct = await calculateProductPrice(updatedProduct);
-
-        const updatedStatus = getUpdatedStatus(product, populateProduct);
-
-        return await rep.updateOneById(productModel, id, { status: updatedStatus });
+        return await calculateProductPriceStatus(updatedProduct);
     } catch (error) {
         throw error;
     }
@@ -83,14 +52,7 @@ export const updateThumbnailByPosition = async (id, url, position) => {
             [updateField]: url
         };
 
-        const product = await rep.updateOneById(productModel, id, { $set: updateObject });
-
-        const populateProduct = await product.populate([
-            { path: "extras.extra", model: extraModel },
-            { path: "ingredients.ingredient", model: ingredientModel }
-        ]);
-
-        return populateProduct;
+        return await rep.updateOneById(productModel, id, { $set: updateObject });
     } catch (error) {
         throw error;
     }
@@ -114,7 +76,7 @@ export const deleteProductById = async (id) => {
     try {
         return await rep.deleteOneById(productModel, id);
     } catch (error) {
-        throw error
+        throw error;
     }
 }
 
@@ -161,63 +123,3 @@ export const createTicket = async (user, cart) => {
         throw error;
     }
 }
-
-//Utils:
-const calculateProductPrice = async (product) => {
-    let totalPrice = 0;
-
-    try {
-        console.log(product)
-        const populateProduct = await product.populate([
-            { path: "extras.extra", model: extraModel },
-            { path: "ingredients.ingredient", model: ingredientModel },
-        ]);
-
-        for (const item of populateProduct.ingredients) {
-            totalPrice += (item.ingredient.pricexg || 0) * item.quantity;
-        }
-
-        for (const item of populateProduct.extras) {
-            totalPrice += (item.extra.pricexu || 0) * item.quantity;
-        }
-
-        const response = await rep.updateOneById(productModel, product._id, { price: totalPrice })
-
-        return response 
-    } catch (error) {
-        throw error
-    }
-};
-
-const getUpdatedStatus = (product, populateProduct) => {
-    if (product.status !== populateProduct.status && populateProduct.status === "online" || populateProduct.status === "featured") {
-
-        const hasFalseIngredients = populateProduct.ingredients.some(
-            (ingredient) => ingredient.ingredient.status === false
-        );
-
-        const hasFalseExtras = populateProduct.extras.some(
-            (extra) => extra.extra.status === false
-        );
-
-        return hasFalseIngredients || hasFalseExtras ? false : true;
-    }
-
-    return populateProduct.status;
-};
-
-
-const dateNowWithFormat = () => {
-    const date = new Date();
-
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hour = date.getHours();
-    const minute = date.getMinutes();
-
-    const formatedDate = `${day}/${month}/${year} ${hour}:${minute < 10 ? '0' : ''}${minute}`;
-
-    return formatedDate;
-};
-
