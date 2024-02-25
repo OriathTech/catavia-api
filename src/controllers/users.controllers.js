@@ -1,6 +1,5 @@
 import * as serv from '../services/users.services.js'
 import * as zod from '../utils/zod/validations.js'
-import userSchemaZ from '../utils/zod/schemas/users.js'
 
 export const getUsers = async (req, res, next) => {
     try {

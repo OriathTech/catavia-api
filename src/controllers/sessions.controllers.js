@@ -50,11 +50,17 @@ export const loginUser = async (req, res, next) => {
 
 export const registerUser = async (req, res, next) => {
     const info = req.body;
+    console.log(JSON.stringify(info))
+    console.log(Array.isArray(info))
+    console.log(typeof info.birthday)
 
     try {
         const data = zod.validateNewElement(userSchemaZ, info, ["name", "email", "whatsapp", "password", "birthday"]);
 
+        console.log(JSON.stringify(data.data))
+
         if (!data.success) {
+            console.log(data.error)
             return res.status(422).json({
                 status: "error",
                 message: "Error de validación",
