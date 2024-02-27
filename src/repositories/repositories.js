@@ -16,7 +16,6 @@ export const findOneById = async (model, id) => {
 
 export const findOneByFilter = async (model, filter) => {
     try {
-        console.log("Aca llegue 3")
         return await model.findOne(filter)
     } catch (error) {
         throw error

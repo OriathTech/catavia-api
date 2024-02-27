@@ -57,13 +57,9 @@ export const getProduct = async (req, res, next) => {
 
 export const postProduct = async (req, res, next) => {
     const info = req.body;
-    console.log(`Recibo: ${JSON.stringify(info)}`)
 
     try {
         const data = zod.validateNewElement(productSchemaZ, info, ["name"])
-
-        console.log(`Validado: ${JSON.stringify(data.data)}`)
-
 
         if (!data.success) {
             return res.status(422).json({
@@ -77,8 +73,6 @@ export const postProduct = async (req, res, next) => {
 
 
         const product = await serv.createProduct(data.data)
-
-        console.log(`Validado: ${JSON.stringify(product)}`)
 
         return res.status(200).json({
             status: "success",
@@ -125,7 +119,6 @@ export const putProduct = async (req, res, next) => {
         }
 
         const product = await serv.updateProductById(productId.data, info)
-        console.log(product)
 
         return res.status(200).json({
             status: "success",
@@ -134,7 +127,6 @@ export const putProduct = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.log(error)
         return res.status(400).json({
             status: "error",
             message: "No se a podido actualizar el elemento.",
@@ -193,7 +185,6 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-        console.log(productId)
         const validatedPosition = zod.validatePosition(position);
         
         if (!validatedPosition.success) {
@@ -205,7 +196,6 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-        console.log(validatedPosition)
         const validatedUrl = zod.validateUrl(url);
 
         if (!validatedUrl.success) {
@@ -218,7 +208,6 @@ export const postThumbnail = async (req, res, next) => {
             });
         }
 
-        console.log(validatedUrl)
         const product = await serv.updateThumbnailByPosition(productId.data, validatedUrl.data , validatedPosition.data);
 
         return res.status(200).json({

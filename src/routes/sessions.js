@@ -6,7 +6,7 @@ export const routerSessions = Router();
 
 //("api/session")
 routerSessions.post("/register", registerUser);
-routerSessions.post("/login/jwt", loginUser );
+routerSessions.post("/login/jwt",  loginUser );
 
 routerSessions.get("/logout", logout);
 routerSessions.get("/current", auth('jwt'), getSession);

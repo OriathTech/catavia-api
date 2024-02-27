@@ -14,10 +14,6 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    points: {
-        type: Number,
-        default: 0
-    },
     birthday: {
         type: String,
         required: true
@@ -29,18 +25,6 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: 'user'
-    },
-    tickets: {
-        type: [
-            {
-                ticketId: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'Tickets',
-                    required: true
-                }
-            }
-        ],
-        default: []
     }
 })
 
