@@ -14,7 +14,37 @@ export const getUsers = async (req, res, next) => {
     } catch (error) {
         return res.status(400).json({
             status: "error",
-            message: "No se ha encontrado el elemento.",
+            message: "No se han encontrado el elemento.",
+            error: error.message
+        });
+    }
+}
+
+export const getTickets = async (req, res, next) => {
+    const uid = req.params.uid;
+    try {
+        const tickets = await serv.findTicketsById(uid)
+
+        console.log(tickets)
+
+        if (tickets.lenght > 0) {
+            return res.status(200).json({
+                status: "success",
+                message: "Se han encontrado los tickets.",
+                payload: tickets
+            });
+        }
+
+        return res.status(200).json({
+            status: "success",
+            message: "El usuario no tiene compras registradas.",
+            payload: tickets
+        });
+
+    } catch (error) {
+        return res.status(400).json({
+            status: "error",
+            message: "No se encontraron los elementos.",
             error: error.message
         });
     }

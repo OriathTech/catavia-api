@@ -84,10 +84,10 @@ export const createTicket = async (user, cart) => {
     try {
         let totalPrice = 0;
         const productPromises = cart.products.map(async (cartItem) => {
-            const product = await rep.findOneById(productModel, cartItem._id);
+            const product = await rep.findOneById(productModel, cartItem.productId);
 
             if (!product) {
-                throw new Error(`Producto con _id ${cartItem._id} no existe`);
+                throw new Error(`Producto con _id ${cartItem.productId} no existe`);
             }
 
             const productPrice = product.price * cartItem.quantity;
@@ -107,7 +107,7 @@ export const createTicket = async (user, cart) => {
         let info = {
             purchaseDate: dateNow,
             deliveryDate: cart.deliveryDate,
-            products: validatedCart,
+            cart: validatedCart,
             total: totalPrice
         }
 

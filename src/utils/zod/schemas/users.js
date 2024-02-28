@@ -14,7 +14,7 @@ const userSchemaZ = z.object({
         invalid_type_error: 'Points must be a number.',
     }).optional(),
     birthday: z.string().refine((value) => /^\d{4}\-\d{2}\-\d{2}$/.test(value), {
-        message: 'Birthday must be a String with format year/month/day.'
+        message: 'Birthday must be a String with format year-month-day.'
     }).optional(),
     whatsapp: z.string().refine((value) => /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/.test(value), {
         message: 'Whatsapp must be a String and a valid phone number.'

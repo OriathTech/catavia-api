@@ -12,7 +12,7 @@ routerProducts.get('/:pid', getProduct);
 routerProducts.put('/:pid', auth('jwt'), roleValidation(["admin"]), putProduct);
 routerProducts.delete('/:pid', auth('jwt'), roleValidation(["admin"]),deleteProduct);
 
-routerProducts.post('/:pid/thumbnail/:position',auth('jwt'), roleValidation(["admin"]), postThumbnail);
+routerProducts.put('/:pid/thumbnail/:position',auth('jwt'), roleValidation(["admin"]), postThumbnail);
 routerProducts.delete('/:pid/thumbnail/:position', auth('jwt'), roleValidation(["admin"]),deleteThumbnail);
 
 routerProducts.post('/checkout', authOptional("jwt"), checkout);
