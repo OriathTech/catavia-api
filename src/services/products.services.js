@@ -49,7 +49,7 @@ export const updateThumbnailByPosition = async (id, url, position) => {
         const updateField = `thumbnails.${position}.url`;
 
         const updateObject = {
-            [updateField]: url
+            [updateField]: url.replace(/"/g, '')
         };
 
         return await rep.updateOneById(productModel, id, { $set: updateObject });

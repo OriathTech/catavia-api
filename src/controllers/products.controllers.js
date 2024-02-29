@@ -171,7 +171,7 @@ export const deleteProduct = async (req, res, next) => {
 export const postThumbnail = async (req, res, next) => {
     const pid = req.params.pid;
     const position = req.params.position.toString();
-    const { url } = req.body;
+    const data = req.body;
 
     try {
         const productId = zod.validateId(pid);
@@ -196,7 +196,7 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-        const validatedUrl = zod.validateUrl(url);
+        const validatedUrl = zod.validateUrl(data.url);
 
         if (!validatedUrl.success) {
             return res.status(422).json({
@@ -207,7 +207,8 @@ export const postThumbnail = async (req, res, next) => {
                 }
             });
         }
-
+        
+        console.log(validatedUrl.data);
         const product = await serv.updateThumbnailByPosition(productId.data, validatedUrl.data , validatedPosition.data);
 
         return res.status(200).json({

@@ -47,7 +47,7 @@ export function validatePosition(position) {
 }
 
 export function validateUrl(url) {
-    const urlSchema = z.string().url()
+    const urlSchema = z.string()
     return urlSchema.safeParse(url, { extra: 'remove' });
 }
 
