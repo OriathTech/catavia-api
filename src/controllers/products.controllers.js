@@ -279,6 +279,7 @@ export const checkout = async (req, res, next) => {
         const dataCart = zod.validateElement(cartSchemaZ, data)
 
         if (!dataCart.success) {
+            console.log(dataCart.error.message)
             return res.status(422).json({
                 status: "error",
                 message: "Error de validación",
@@ -289,6 +290,8 @@ export const checkout = async (req, res, next) => {
         }
 
         const ticket = await serv.createTicket(user, dataCart.data);
+
+        console.log("ESTE ES EL TICKET",ticket)
 
         if (!ticket) {
             throw new Error(`Hubo un problema en la Base de datos.`)
@@ -301,6 +304,7 @@ export const checkout = async (req, res, next) => {
         });
 
     } catch (error) {
+        console.log(error.message)
         return res.status(400).json({
             status: "error",
             message: "No se pudo eliminar el elemento.",

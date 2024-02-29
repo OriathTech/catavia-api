@@ -48,10 +48,10 @@ export const authOptional = (strategy) => {
         passport.authenticate(strategy, (error, user, info) => {
             if (error || !user) {
                 req.user = null;
-                next()
+                return next()
             }
             req.user = user;
-            next();
+            return next();
         })(req, res, next);
     };
 };

@@ -3,6 +3,7 @@ import productModel from "../models/products.model.js";
 import ticketModel from "../models/tickets.model.js";
 
 import { dateNowWithFormat, calculateProductPriceStatus } from "../utils/functions/functions.js";
+import { json } from "express";
 
 export const findProducts = async () => {
     try {
@@ -82,11 +83,13 @@ export const deleteProductById = async (id) => {
 
 export const createTicket = async (user, cart) => {
     try {
+        console.log("Aca llega", JSON.stringify(user), JSON.stringify(cart))
         let totalPrice = 0;
         const productPromises = cart.products.map(async (cartItem) => {
             const product = await rep.findOneById(productModel, cartItem.productId);
 
             if (!product) {
+
                 throw new Error(`Producto con _id ${cartItem.productId} no existe`);
             }
 
@@ -99,6 +102,7 @@ export const createTicket = async (user, cart) => {
                 price: productPrice
             };
         });
+
 
         const validatedCart = await Promise.all(productPromises);
 
@@ -116,9 +120,12 @@ export const createTicket = async (user, cart) => {
                 userId: user._id,
                 email: user.email
             };
-        }
 
-        return await rep.createOne(ticketModel, info);
+            return await rep.createOne(ticketModel, info);
+        } 
+        
+        return info;
+
     } catch (error) {
         throw error;
     }

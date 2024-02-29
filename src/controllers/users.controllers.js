@@ -25,9 +25,7 @@ export const getTickets = async (req, res, next) => {
     try {
         const tickets = await serv.findTicketsById(uid)
 
-        console.log(tickets)
-
-        if (tickets.lenght > 0) {
+        if (tickets.length > 0) {
             return res.status(200).json({
                 status: "success",
                 message: "Se han encontrado los tickets.",
