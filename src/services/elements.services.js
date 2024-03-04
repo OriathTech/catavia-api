@@ -30,7 +30,7 @@ export const createElement = async (info) => {
 
 export const updateElementById = async (id, info) => {
     try {
-        const element = await rep.findOneById(id)
+        const element = await rep.findOneById(elementModel, id)
         const updatedElement = await rep.updateOneById(elementModel, id, info);
         const productsWithElement = await rep.findAll(productModel, { 'elements._id': element._id });
 
@@ -56,6 +56,8 @@ export const updateElementById = async (id, info) => {
                 reload: true,
                 payload: updatedElement
             }
+
+            console.log("response:", response)
 
             return response;
         }

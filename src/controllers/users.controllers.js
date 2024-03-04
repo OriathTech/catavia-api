@@ -102,6 +102,7 @@ export const deleteUser = async (req, res, next) => {
         return res.status(200).json({
             status: "success",
             message: "El elemento ha sido eliminado.",
+            payload: user
         });
 
     } catch (error) {

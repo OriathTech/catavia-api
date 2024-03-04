@@ -31,7 +31,7 @@ export const dateNowWithFormat = () => {
     const hour = date.getHours().toString().padStart(2, '0');
     const minute = date.getMinutes().toString().padStart(2, '0');
 
-    const formattedDate = `${day}/${month}/${year} ${hour}:${minute}`;
+    const formattedDate = `${year}-${month}-${day} ${hour}:${minute}`;
     return formattedDate;
 };
 

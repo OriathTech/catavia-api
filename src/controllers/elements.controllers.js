@@ -23,9 +23,12 @@ export const getElements = async (req, res, next) => {
 
 export const postElement = async (req, res, next) => {
     const info = req.body;
+    console.log(info)
 
     try {
         const data = zod.validateNewElement(elementSchemaZ, info, ["name"])
+
+        console.log("ZOD:", data)
 
         if (!data.success) {
             return res.status(422).json({
@@ -73,6 +76,8 @@ export const putElement = async (req, res, next) => {
 
         const data = zod.validateElement(elementSchemaZ, info);
 
+        console.log("validacion:", JSON.stringify(data.error))
+
         if (!data.success) {
             return res.status(422).json({
                 status: "error",
@@ -82,7 +87,6 @@ export const putElement = async (req, res, next) => {
                 }
             });
         }
-
         const response = await serv.updateElementById(elementId.data, data.data);
 
         return res.status(200).json({

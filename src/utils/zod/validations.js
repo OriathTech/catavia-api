@@ -2,7 +2,6 @@ import { z } from "zod";
 
 
 export function validateElement(schema, data) {
-    console.log(data)
     const result = schema.safeParse(data, { extra: 'remove' });
     return result
 }
