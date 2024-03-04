@@ -14,7 +14,7 @@ const thumbnails = z.object({
 });
 
 const itemElement = z.object({
-    id: z.string().optional(),
+    _id: z.string().optional(),
     name: z.string().optional(),
     price: z.number().optional(),
     status: z.string().optional(),

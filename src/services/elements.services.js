@@ -36,7 +36,7 @@ export const updateElementById = async (id, info) => {
 
         if (productsWithElement.length > 0) {
             await rep.updateManyByFilter(productModel,
-                { 'elements.id': element._id },
+                { 'elements._id': element._id },
                 {
                     $set:
                     {

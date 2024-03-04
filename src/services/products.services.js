@@ -3,7 +3,6 @@ import productModel from "../models/products.model.js";
 import ticketModel from "../models/tickets.model.js";
 
 import { dateNowWithFormat, calculateProductPriceStatus } from "../utils/functions/functions.js";
-import { json } from "express";
 
 export const findProducts = async () => {
     try {
@@ -35,10 +34,7 @@ export const findProductById = async (id) => {
 
 export const updateProductById = async (id, info) => {
     try {
-        const product = await rep.findOneById(productModel, id);
-
         const updatedProduct = await rep.updateOneById(productModel, id, info);
-
         return await calculateProductPriceStatus(updatedProduct);
     } catch (error) {
         throw error;

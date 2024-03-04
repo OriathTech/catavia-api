@@ -49,7 +49,7 @@ const productSchema = new Schema({
     elements: {
         type: [
             {
-                id: {
+                _id: {
                     type: String,
                     required: true
                 },       
