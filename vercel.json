@@ -6,6 +6,6 @@
       }
     ],
     "routes": [
-      { "handle": "vercel", "src": "/(.*)", "dest": "/src/index.js" }
+      { "src": "/(.*)", "dest": "/src/index.js" }
     ]
 }
